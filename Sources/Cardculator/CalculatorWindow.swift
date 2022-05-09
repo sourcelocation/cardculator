@@ -20,9 +20,6 @@ class CalculatorWindow: UIWindow {
         rootViewController = vc
         isHidden = false
         rootViewController?.view.frame = frame
-        isOpaque = false
-        clipsToBounds = true
-        layer.masksToBounds = true
     }
     
     required init?(coder: NSCoder) {

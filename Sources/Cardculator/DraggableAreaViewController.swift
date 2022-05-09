@@ -22,13 +22,12 @@ class DraggableAreaViewController: UIViewController {
     }
     
     func showCalculatorView() {
+        log.log("cardculator showCalculatorView")
         let ratio = 0.6
         let padding: CGFloat = 10
         let calcwidth = view.bounds.width - padding * 2
         let calculatorView = CalculatorView(close: hideCalculatorView)
             .frame(width: calcwidth, height: calcwidth * ratio)
-        let vc = UIHostingController(rootView: calculatorView)
-        vc.view.backgroundColor = .clear
         
         let calcVC = UIHostingController(rootView: calculatorView)
         addChild(calcVC)
@@ -45,6 +44,7 @@ class DraggableAreaViewController: UIViewController {
         })
     }
     func hideCalculatorView() {
+        log.log("cardculator hideCalculatorView")
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
             self.calcView.alpha = 0
         }, completion: { _ in
@@ -53,6 +53,7 @@ class DraggableAreaViewController: UIViewController {
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+        log.log("cardculator handlePan")
         if gesture.state == .ended  {
             let velocity = gesture.velocity(in: view)
             print(velocity.y)
