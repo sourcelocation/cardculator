@@ -1,4 +1,4 @@
-THEOS_DEVICE_IP = 192.168.1.106
+THEOS_DEVICE_IP = 192.168.1.102
 THEOS_DEVICE_PORT = 22
 
 TARGET := iphone:clang:latest:14.0
@@ -11,6 +11,7 @@ $(TWEAK_NAME)_FILES = $(shell find Sources/Cardculator -name '*.swift') $(shell 
 $(TWEAK_NAME)_SWIFTFLAGS = -ISources/CardculatorC/include
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc -ISources/CardculatorC/include
 $(TWEAK_NAME)_LIBRARIES += activator
+
 
 BUNDLE_NAME = CardculatorPreferences
 $(BUNDLE_NAME)_FILES = $(shell find Sources/CardculatorPreferences -name '*.swift')

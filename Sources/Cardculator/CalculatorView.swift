@@ -18,7 +18,7 @@ struct CalculatorView: View {
     var buttonTypes: [[CalculatorButton.CalcButtonType]] = [
         [.six,.seven,.eight,.nine,.c,.subtract,.divide],
         [.two,.three,.four,.five,.plusminus,.add,.multiply],
-        [.dot,.zero,.one,.percent,.settings,.equal],
+        [.one,.zero,.dot,.percent,.sqrt,.equal],
     ]
     @State var numbers: [Double] = []
     @State var operations: [Operation] = []
@@ -109,6 +109,26 @@ struct CalculatorView: View {
             return nums1.0 / nums1.1
         }
     }
+    func runCalculation() {
+        if numbers.count > 1 {
+            for (i,n) in numbers.enumerated() {
+                if n == 0 && i != 0 && operations[i - 1] == .divide {
+                    number = "not funny"
+                    operations = []
+                    numbers = []
+                    selectedOperation = nil
+                    topText = number
+                    return
+                }
+            }
+            number = calculate().removeZerosFromEnd()
+            operations = []
+            numbers = []
+            selectedOperation = nil
+            topText = number
+            //calculate
+        }
+    }
     
     func didTap(button: CalculatorButton.CalcButtonType) {
         switch button {
@@ -129,14 +149,7 @@ struct CalculatorView: View {
                 selectedOperation = .divide
             }
             else if button == .equal {
-                if numbers.count > 1 {
-                    number = calculate().removeZerosFromEnd()
-                    operations = []
-                    numbers = []
-                    selectedOperation = nil
-                    topText = number
-                    //calculate
-                }
+                runCalculation()
             }
             if operations.count > 0 {
                 topText = calculate().removeZerosFromEnd()
@@ -162,8 +175,10 @@ struct CalculatorView: View {
             topText = number
         case .close:
             break // created at the top of file
-        case .settings:
-            break
+        case .sqrt:
+            runCalculation()
+            number = (Double(number) ?? 0).squareRoot().removeZerosFromEnd()
+            topText = number
         default:
             if selectedOperation != nil { // After pressing operation button
                 operations.append(selectedOperation!)
@@ -205,7 +220,7 @@ struct CalculatorButton: View {
         case equal = "="
         case divide = "÷"
         case multiply = "×"
-        case settings = "S"
+        case sqrt = "R"
         case close = "X"
     }
     
@@ -231,7 +246,7 @@ struct CalculatorButton: View {
         case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,
                 .dot,.subtract,.add,.equal,.divide,.multiply:
             return .white
-        case .settings,.close:
+        case .sqrt,.close:
             return Color(red: 160 / 256, green: 160 / 256, blue: 160 / 256)
         }
     }
@@ -255,8 +270,8 @@ struct CalculatorButton: View {
         case .close:
             Image(systemName: "xmark")
                 .font(.system(size: 16, weight: .medium, design: .default))
-        case .settings:
-            Image(systemName: "gear")
+        case .sqrt:
+            Image(systemName: "x.squareroot")
                 .font(.system(size: 16, weight: .medium, design: .default))
         case .subtract:
             Image(systemName: "minus")
@@ -278,7 +293,7 @@ struct CalculatorButton: View {
     
     func buttonColor() -> Color {
         switch type {
-        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.close,.settings:
+        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.close,.sqrt:
             return Color(red: 49 / 256, green: 49 / 256, blue: 49 / 256)
         case .c,.plusminus,.percent:
             return Color(red: 160 / 256, green: 160 / 256, blue: 160 / 256)
@@ -293,6 +308,5 @@ struct CalculatorView_Previews: PreviewProvider {
         CalculatorView(close: {})
             .previewLayout(PreviewLayout.sizeThatFits)
             .frame(width: 367, height: 219)
-//.previewInterfaceOrientation(.landscapeLeft)
     }
 }

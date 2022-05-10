@@ -18,6 +18,9 @@ class DraggableAreaViewController: UIViewController {
     }
     
     let maxCalcWidth: CGFloat = 400
+    var speedK: Double {
+        Preferences.shared.speed / 100
+    }
     var bigScreen: Bool {
         view.bounds.width > maxCalcWidth
     }
@@ -66,34 +69,43 @@ class DraggableAreaViewController: UIViewController {
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard let calcView = calcView else { return }
+        let translation = gesture.translation(in: view)
+        guard let gestureView = gesture.view else {
+            return
+        }
+        
         if gesture.state == .ended {
             let velocity = gesture.velocity(in: view)
             
             var calcX: CGFloat = calcView.center.x
             var calcY: CGFloat = 0
+            var animationTime: TimeInterval = 0
             let minVelocity: CGFloat = 300
             
-            if velocity.y < -minVelocity || (!(velocity.y > minVelocity) && gesture.location(in: view).y < view.bounds.height / 2) {
-                calcY = calcView.frame.height / 2 + safeAreaInsets.top + 10
+            if Preferences.shared.snapToCorners.boolValue {
+                animationTime = 0.75
+                if velocity.y < -minVelocity || (!(velocity.y > minVelocity) && gesture.location(in: view).y < view.bounds.height / 2) {
+                    calcY = calcView.frame.height / 2 + max(10, safeAreaInsets.top)
+                } else {
+                    calcY = view.bounds.height - calcView.frame.height / 2 - max(10, safeAreaInsets.bottom)
+                }
+                
+                if velocity.x < -minVelocity || (!(velocity.x > minVelocity) && gesture.location(in: view).x < view.bounds.width / 2) {
+                    calcX = calcView.frame.width / 2 + max(10, safeAreaInsets.left)
+                } else {
+                    calcX = view.bounds.width - calcView.frame.width / 2 - max(10, safeAreaInsets.right)
+                }
             } else {
-                calcY = view.bounds.height - calcView.frame.height / 2 - 10 - safeAreaInsets.bottom
-            }
-            
-            if velocity.x < -minVelocity || (!(velocity.x > minVelocity) && gesture.location(in: view).x < view.bounds.width / 2) {
-                calcX = calcView.frame.width / 2 + safeAreaInsets.left + 10
-            } else {
-                calcX = view.bounds.width - calcView.frame.width / 2 - 10 - safeAreaInsets.right
+                animationTime = 0.3
+                calcX = (0...view.bounds.width).clamp(gestureView.center.x + translation.x + velocity.x / 15)
+                calcY = (0...view.bounds.height).clamp(gestureView.center.y + translation.y + velocity.y / 15)
             }
             
             let finalPoint = CGPoint(x: calcX, y: calcY)
-            
-            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: sqrt(pow(velocity.y, 2) + pow(velocity.x, 2)) / 70, options: .curveEaseInOut, animations: {
+            let velK = view.bounds.width / 4
+            UIView.animate(withDuration: animationTime / speedK, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: sqrt(pow(velocity.y, 2) + pow(velocity.x, 2)) / velK * speedK, options: .curveEaseInOut, animations: {
                 self.calcView?.center = finalPoint
             })
-        }
-        let translation = gesture.translation(in: view)
-        guard let gestureView = gesture.view else {
-            return
         }
         gestureView.center = CGPoint(
             x: gestureView.center.x + translation.x,
