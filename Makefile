@@ -5,15 +5,22 @@ TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES = SpringBoard
 
 
-include $(THEOS)/makefiles/common.mk
-
 TWEAK_NAME = Cardculator
 
-Cardculator_FILES = $(shell find Sources/Cardculator -name '*.swift') $(shell find Sources/CardculatorC -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')
-Cardculator_SWIFTFLAGS = -ISources/CardculatorC/include
-Cardculator_CFLAGS = -fobjc-arc -ISources/CardculatorC/include
-Cardculator_LIBRARIES += activator
-#	Cardculator_SWIFT_BRIDGING_HEADER = Cardculator-Bridging-Header.h
-#	not needed for now
+$(TWEAK_NAME)_FILES = $(shell find Sources/Cardculator -name '*.swift') $(shell find Sources/CardculatorC -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')
+$(TWEAK_NAME)_SWIFTFLAGS = -ISources/CardculatorC/include
+$(TWEAK_NAME)_CFLAGS = -fobjc-arc -ISources/CardculatorC/include
+$(TWEAK_NAME)_LIBRARIES += activator
 
+BUNDLE_NAME = CardculatorPreferences
+$(BUNDLE_NAME)_FILES = $(shell find Sources/CardculatorPreferences -name '*.swift')
+$(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
+$(BUNDLE_NAME)_CFLAGS = -fobjc-arc
+$(BUNDLE_NAME)_FRAMEWORKS = Preferences
+$(BUNDLE_NAME)_EXTRA_FRAMEWORKS = Cephei
+
+
+include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
+include $(THEOS_MAKE_PATH)/bundle.mk
+include $(THEOS_MAKE_PATH)/aggregate.mk

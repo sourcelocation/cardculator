@@ -26,16 +26,6 @@ class CalculatorWindow: UIWindow {
         super.init(coder: coder)
     }
     
-//    func togglePresentation() {
-//        if vc.calculatorViewShown() {
-//            log.log("Hi, again 1")
-//            vc.hideCalculatorView()
-//        } else {
-//            log.log("Hi, again 2")
-//            vc.showCalculatorView()
-//        }
-//    }
-    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard let vc = rootViewController else { return nil }
         let result = vc.view.hitTest(point, with: event)

@@ -61,8 +61,10 @@ let cxxFlags: [String] = [
 ]
 
 let swiftFlags: [String] = libFlags + [
-    "-target", triple, "-sdk", sdk, "-resource-dir", resourceDir,
+    "-target", triple, "-sdk", sdk, "-resource-dir", resourceDir
 ]
+
+
 
 let package = Package(
     name: "Cardculator",
@@ -72,6 +74,10 @@ let package = Package(
             name: "Cardculator",
             targets: ["Cardculator"]
         ),
+        .library(
+            name: "CardculatorPreferences",
+            targets: ["CardculatorPreferences"]
+        )
     ],
     targets: [
         .target(
@@ -82,6 +88,10 @@ let package = Package(
         .target(
             name: "Cardculator",
             dependencies: ["CardculatorC"],
+            swiftSettings: [.unsafeFlags(swiftFlags)]
+        ),
+        .target(
+            name: "CardculatorPreferences",
             swiftSettings: [.unsafeFlags(swiftFlags)]
         ),
     ]

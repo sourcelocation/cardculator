@@ -13,7 +13,6 @@ class CardculatorListener: NSObject, LAListener {
 
     func activator(_ activator: LAActivator?, receive event: LAEvent?) {
         event?.isHandled = true
-        log.log("cardculator activator")
         
         if calculatorWindow.vc.calculatorViewShown() {
             calculatorWindow.vc.hideCalculatorView()
@@ -24,8 +23,6 @@ class CardculatorListener: NSObject, LAListener {
 
     override init() {
         super.init()
-        
-        log.log("cardculator init")
         let lashared = LAActivator.sharedInstance()
         if !lashared!.hasSeenListener(withName: listenerId) {
             lashared?.assign(LAEvent.event(withName: "libactivator.slide-in.bottom-right") as? LAEvent, toListenerWithName: listenerId)
@@ -36,7 +33,6 @@ class CardculatorListener: NSObject, LAListener {
 
 class SpringBoardHook: ClassHook<SpringBoard> {
     func applicationDidFinishLaunching(_ application : AnyObject) {
-        log.log("cardculator applicationDidFinishLaunching")
         orig.applicationDidFinishLaunching(application)
         
         calculatorWindow = CalculatorWindow(frame: UIScreen.main.bounds)
