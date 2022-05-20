@@ -1,0 +1,9 @@
+Package: ovh.exerhythm.cardculatorccmodule
+Name: Cardculator
+Depends: mobilesubstrate
+Version: 1.1
+Architecture: iphoneos-arm
+Description: An awesome Control Center module!
+Maintainer: sourcelocation
+Author: sourcelocation
+Section: Control Center (Modules)
