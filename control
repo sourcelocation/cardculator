@@ -1,9 +1,9 @@
 Package: ovh.exerhythm.cardculator
 Name: Cardculator
-Version: 0.0.1
+Version: 1.1
 Architecture: iphoneos-arm
-Description: An awesome Orion tweak!
+Description: Calculator, but smaller
 Maintainer: sourcelocation
 Author: sourcelocation
 Section: Tweaks
-Depends: ${ORION}, firmware (>= 13.0), libactivator
+Depends: ${ORION}, firmware (>= 14.0), libactivator, ws.hbang.common (>= 1.17), com.opa334.ccsupport (>= 1.3.7)

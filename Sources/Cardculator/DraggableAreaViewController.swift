@@ -10,65 +10,103 @@ import SwiftUI
 
 class DraggableAreaViewController: UIViewController {
     
-    private var calcView: UIView?
+    private var calcUIView: UIView?
     private var lastSwipeBeginningPoint: CGPoint?
     
     var safeAreaInsets: UIEdgeInsets {
         (view.window?.windowScene?.windows.first!.safeAreaInsets)!
     }
     
-    let maxCalcWidth: CGFloat = 400
+    var maxCalcWidth: CGFloat {
+        switch TweakPreferences.shared.selectedStyle as! String {
+        case "Card", "Card Alt":
+            return 400
+        case "Stock":
+            return 250
+        case "Square":
+            return 300
+        default:
+            return 10
+        }
+    }
+    var ratio: CGFloat {
+        switch TweakPreferences.shared.selectedStyle as! String {
+        case "Card", "Card Alt":
+            return 0.6
+        case "Stock":
+            return 1.45
+        case "Square":
+            return 1
+        default:
+            return 1
+        }
+    }
+    
     var speedK: Double {
-        Preferences.shared.speed / 100
+        TweakPreferences.shared.speed / 100
     }
     var bigScreen: Bool {
         view.bounds.width > maxCalcWidth
     }
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.stylePrefChanged(notification:)), name: Notification.Name("StylePrefChanged"), object: nil)
+
+    }
+    
+    @objc func stylePrefChanged(notification: NSNotification) {
+        guard calculatorViewShown() else { return }
+        hideCalculatorView()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
+            self.showCalculatorView()
+        })
+    }
+    
     func calculatorViewShown() -> Bool {
-        return calcView != nil
+        return calcUIView != nil
     }
     
     func showCalculatorView() {
-        let ratio = 0.6
         let padding: CGFloat = 10
         let calcwidth = min(maxCalcWidth, view.bounds.width - padding * 2)
         let calcheight = calcwidth * ratio
         
-        let calculatorView = CalculatorView(close: hideCalculatorView)
-            .frame(width: calcwidth, height: calcheight)
+        let calculatorView = CalculatorView(close: hideCalculatorView).frame(width: calcwidth, height: calcheight)
         
-        if calcView == nil {
+        if calcUIView == nil {
             let calcVC = UIHostingController(rootView: calculatorView)
             addChild(calcVC)
             view.addSubview(calcVC.view)
             calcVC.didMove(toParent: self)
-            calcView = calcVC.view
+            calcUIView = calcVC.view
         }
         
         let resY = view.bounds.height - calcheight - padding - safeAreaInsets.bottom
-        calcView!.frame = .init(x: padding, y: resY, width: calcwidth, height: calcheight)
+        calcUIView!.frame = .init(x: padding, y: resY, width: calcwidth, height: calcheight)
         
         
-        calcView!.backgroundColor = .clear
-        calcView!.translatesAutoresizingMaskIntoConstraints = false
-        calcView!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
-        calcView!.alpha = 0
+        calcUIView!.backgroundColor = .clear
+        calcUIView!.translatesAutoresizingMaskIntoConstraints = false
+        calcUIView!.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        calcUIView!.alpha = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-            self.calcView!.alpha = 1
+            self.calcUIView!.alpha = 1
         })
     }
     func hideCalculatorView() {
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-            self.calcView?.alpha = 0
+            self.calcUIView?.alpha = 0
         }, completion: { _ in
-            self.calcView?.removeFromSuperview()
-            self.calcView = nil
+            self.calcUIView?.removeFromSuperview()
+            self.calcUIView = nil
         })
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-        guard let calcView = calcView else { return }
+        guard let calcView = calcUIView else { return }
         let translation = gesture.translation(in: view)
         guard let gestureView = gesture.view else {
             return
@@ -82,7 +120,7 @@ class DraggableAreaViewController: UIViewController {
             var animationTime: TimeInterval = 0
             let minVelocity: CGFloat = 300
             
-            if Preferences.shared.snapToCorners.boolValue {
+            if TweakPreferences.shared.snapToCorners.boolValue {
                 animationTime = 0.75
                 if velocity.y < -minVelocity || (!(velocity.y > minVelocity) && gesture.location(in: view).y < view.bounds.height / 2) {
                     calcY = calcView.frame.height / 2 + max(10, safeAreaInsets.top)
@@ -104,7 +142,7 @@ class DraggableAreaViewController: UIViewController {
             let finalPoint = CGPoint(x: calcX, y: calcY)
             let velK = view.bounds.width / 4
             UIView.animate(withDuration: animationTime / speedK, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: sqrt(pow(velocity.y, 2) + pow(velocity.x, 2)) / velK * speedK, options: .curveEaseInOut, animations: {
-                self.calcView?.center = finalPoint
+                self.calcUIView?.center = finalPoint
             })
         }
         gestureView.center = CGPoint(
@@ -122,7 +160,7 @@ class DraggableAreaViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator);
         
 //        hideCalculatorView()
-        if calcView != nil {
+        if calcUIView != nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                 self.showCalculatorView()
             })

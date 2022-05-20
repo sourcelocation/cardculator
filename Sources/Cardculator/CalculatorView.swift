@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Cephei
 
 enum Operation {
     case add,subtract,multiply,divide
@@ -15,11 +16,7 @@ enum Operation {
 struct CalculatorView: View {
     
     let close: () -> Void
-    var buttonTypes: [[CalculatorButton.CalcButtonType]] = [
-        [.six,.seven,.eight,.nine,.c,.subtract,.divide],
-        [.two,.three,.four,.five,.plusminus,.add,.multiply],
-        [.one,.zero,.dot,.percent,.sqrt,.equal],
-    ]
+    @State var buttonTypes: [[CalculatorButton.CalcButtonType]] = [[]]
     @State var numbers: [Double] = []
     @State var operations: [Operation] = []
     @State var topText: String = "0"
@@ -31,7 +28,6 @@ struct CalculatorView: View {
     var body: some View {
         GeometryReader { (geometry) in
             VStack(alignment: .leading, spacing:8) {
-//                Spacer(minLength: 0)
                 HStack {
                     CalculatorButton(action: {
                         close()
@@ -59,7 +55,17 @@ struct CalculatorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.init(red: 29 / 256, green: 30 / 256, blue: 31 / 256))
         .cornerRadius(24)
+        .opacity(HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown") ? 1 : 0)
+        .onAppear(perform: {
+            stylePrefChanged()
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("StylePrefChanged"))) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.23, execute: {
+                stylePrefChanged()
+            })
+        }
     }
+    
     
     func buttonSize(viewWidth: CGFloat) -> CGFloat {
         let buttonMargin: CGFloat = 8
@@ -197,6 +203,42 @@ struct CalculatorView: View {
             topText = self.number
         }
     }
+    
+    
+    
+    func stylePrefChanged() {
+        updateCalculatorStyle(style: TweakPreferences.shared.selectedStyle as! String)
+    }
+    func updateCalculatorStyle(style: String) {
+        if style == "Card" {
+            buttonTypes = [
+               [.six,.seven,.eight,.nine    ,.c,.subtract,.divide],
+               [.two,.three,.four,.five,.plusminus,.add,.multiply],
+               [.one,.zero,.dot,.percent,.sqrt,.equal],
+           ]
+        } else if style == "Card Alt" {
+            buttonTypes = [
+               [.c,.subtract,.divide,.six,.seven,.eight,.nine],
+               [.plusminus,.add,.multiply,.two,.three,.four,.five],
+               [.percent,.sqrt,.equal,.one,.zero,.dot],
+           ]
+        } else if style == "Stock" {
+            buttonTypes = [
+                [.c,.plusminus,.sqrt,.divide],
+                [.seven,.eight,.nine,.multiply],
+                [.four,.five,.six,.subtract],
+                [.one,.two,.three,.add],
+                [.zero,.dot,.equal],
+           ]
+        } else if style == "Square" {
+            buttonTypes = [
+                [.seven,.eight,.nine,.c,.subtract],
+                [.four,.five,.six,.plusminus,.add],
+                [.one,.two,.three,.sqrt,.multiply],
+                [.zero,.dot,.divide,.equal],
+           ]
+        }
+    }
 }
 
 struct CalculatorButton: View {
@@ -229,24 +271,24 @@ struct CalculatorButton: View {
     var size: CGFloat
     @Binding var selectedOperation: Operation?
     
-    
     var body: some View {
         Button(action: action, label: {
             buttonTitle()
                 .frame(width: type == .zero ? size * 2 + 8: size, height: size)
                 .background(buttonColor())
                 .cornerRadius(999)
+                .opacity(HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown") ? 1 : 0)
         })
     }
     
     func buttonForegroundColor() -> Color {
         switch type {
-        case .c, .plusminus, .percent:
+        case .c, .plusminus, .percent,.sqrt:
             return .black
         case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,
                 .dot,.subtract,.add,.equal,.divide,.multiply:
             return .white
-        case .sqrt,.close:
+        case .close:
             return Color(red: 160 / 256, green: 160 / 256, blue: 160 / 256)
         }
     }
@@ -258,12 +300,12 @@ struct CalculatorButton: View {
     
     @ViewBuilder func buttonTitleElement() -> some View {
         switch type {
-        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.c:
+        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.c,.add:
             Text(type.rawValue)
-                .font(.system(size: 18, weight: .medium, design: .default))
+                .font(.system(size: type == .add ? 21 : 18, weight: .medium, design: .default))
         case .plusminus:
             Image(systemName: "plus.slash.minus")
-                .font(.system(size: 16, weight: .medium, design: .default))
+                .font(.system(size: 18, weight: .medium, design: .default))
         case .percent:
             Image(systemName: "percent")
                 .font(.system(size: 16, weight: .medium, design: .default))
@@ -272,12 +314,9 @@ struct CalculatorButton: View {
                 .font(.system(size: 16, weight: .medium, design: .default))
         case .sqrt:
             Image(systemName: "x.squareroot")
-                .font(.system(size: 16, weight: .medium, design: .default))
+                .font(.system(size: 16, weight: .regular, design: .default))
         case .subtract:
             Image(systemName: "minus")
-                .font(.system(size: 16, weight: .medium, design: .default))
-        case .add:
-            Image(systemName: "plus")
                 .font(.system(size: 16, weight: .medium, design: .default))
         case .equal:
             Image(systemName: "equal")
@@ -293,9 +332,9 @@ struct CalculatorButton: View {
     
     func buttonColor() -> Color {
         switch type {
-        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.close,.sqrt:
+        case .zero,.one,.two,.three,.four,.five,.six,.seven,.eight,.nine,.dot,.close:
             return Color(red: 49 / 256, green: 49 / 256, blue: 49 / 256)
-        case .c,.plusminus,.percent:
+        case .c,.plusminus,.percent,.sqrt:
             return Color(red: 160 / 256, green: 160 / 256, blue: 160 / 256)
         default:
             return Color(red: 246 / 256, green: 153 / 256, blue: 6 / 256)
