@@ -42,7 +42,6 @@ class SpringBoardHook: ClassHook<SpringBoard> {
         orig.applicationDidFinishLaunching(application)
         
         calculatorWindow = CalculatorWindow(frame: UIScreen.main.bounds)
-        calculatorWindow.isHidden = false
         
         listener = CardculatorListener()
         

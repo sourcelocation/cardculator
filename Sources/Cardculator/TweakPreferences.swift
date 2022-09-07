@@ -19,11 +19,11 @@ class TweakPreferences {
             "style" : "Square",
         ])
         
-        preferences.register(_Bool: &enabled, default: false, forKey: "enabled")
-        preferences.register(_Bool: &snapToCorners, default: true, forKey: "snapToCorners")
-        preferences.register(double: &speed, default: 125, forKey: "speed")
-        preferences.register(_Bool: &preferencesShown, default: false, forKey: "preferencesShown")
-        preferences.register(object: &selectedStyle, default: "Square", forKey: "style")
+        preferences.register(&enabled, default: false, forKey: "enabled")
+        preferences.register(&snapToCorners, default: true, forKey: "snapToCorners")
+        preferences.register(&speed, default: 125, forKey: "speed")
+        preferences.register(&preferencesShown, default: false, forKey: "preferencesShown")
+        preferences.register(&selectedStyle, default: "Square", forKey: "style")
         
         preferences.registerPreferenceChange({ newValue, copy1 in
             NotificationCenter.default.post(name: Notification.Name("StylePrefChanged"), object: nil)

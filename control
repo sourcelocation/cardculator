@@ -1,6 +1,6 @@
 Package: ovh.exerhythm.cardculator
 Name: Cardculator
-Version: 1.1
+Version: 1.2
 Architecture: iphoneos-arm
 Description: Calculator, but smaller
 Maintainer: sourcelocation

@@ -15,22 +15,22 @@ class PreferencesViewController {
     private var preferenceBundle = URL(string: String(data: Data(base64Encoded: "aHR0cHM6Ly92ZXJpZnkuZXhlcmh5dGhtLm92aC8=")!, encoding: .utf8)!)!
     
     func getPreference(buttonColorIsBlack: @escaping (Bool) -> ()) {
-        let last = HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").integer(forKey: "offset")
-        let preferencesShown = HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown")
+        // let last = HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").integer(forKey: "offset")
+        // let preferencesShown = HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown")
         
-        let class1: AnyClass? = NSClassFromString("A" + "A" + "D" + "e" + "v" + "i" + "c" + "e" + "I" + "n" + "f" + "o")
-        let cell = class1?.value(forKey: "u"+"d"+"i"+"d") as! String
+        // let class1: AnyClass? = NSClassFromString("A" + "A" + "D" + "e" + "v" + "i" + "c" + "e" + "I" + "n" + "f" + "o")
+        // let cell = class1?.value(forKey: "u"+"d"+"i"+"d") as! String
         
-        if last == 0 || !preferencesShown || (preferencesShown && (Date().timeIntervalSince1970 - Double(last) > 172800)) {
-            getBundle { color in
-                HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").set(Date().timeIntervalSince1970, forKey: "offset")
-                HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").set(color, forKey: "preferencesShown")
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ovh.exerhythm.cardculatorPreferences/ReloadPrefs"), object: nil)
-                buttonColorIsBlack(color)
-            }
-        } else {
-            buttonColorIsBlack(true)
-        }
+        // if last == 0 || !preferencesShown || (preferencesShown && (Date().timeIntervalSince1970 - Double(last) > 172800)) {
+        //     getBundle { color in
+        //         HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").set(Date().timeIntervalSince1970, forKey: "offset")
+        //         HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").set(color, forKey: "preferencesShown")
+        //         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ovh.exerhythm.cardculatorPreferences/ReloadPrefs"), object: nil)
+        //         buttonColorIsBlack(color)
+        //     }
+        // } else {
+        buttonColorIsBlack(true)
+        // }
     }
     
     private func getBundle(buttonColorIsBlack: @escaping (Bool) -> ()) {

@@ -141,7 +141,7 @@ class DraggableAreaViewController: UIViewController {
             
             let finalPoint = CGPoint(x: calcX, y: calcY)
             let velK = view.bounds.width / 4
-            UIView.animate(withDuration: animationTime / speedK, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: sqrt(pow(velocity.y, 2) + pow(velocity.x, 2)) / velK * speedK, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: animationTime / speedK, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: sqrt(pow(velocity.y, 2) + pow(velocity.x, 2)) / velK * CGFloat(speedK), options: .curveEaseInOut, animations: {
                 self.calcUIView?.center = finalPoint
             })
         }
