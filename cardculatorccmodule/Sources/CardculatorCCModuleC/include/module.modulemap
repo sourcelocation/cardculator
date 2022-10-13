@@ -1,0 +1,4 @@
+module CardculatorCCModuleC {
+    umbrella "."
+    export *
+}

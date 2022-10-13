@@ -5,11 +5,11 @@
 	<key>CFBundleName</key>
 	<string>CardculatorCCModule</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cardculator</string>
+	<string>Cardculator1</string>
 	<key>CFBundleExecutable</key>
 	<string>CardculatorCCModule</string>
 	<key>CFBundleIdentifier</key>
-	<string>ovh.exerhythm.cardculatorccmodule</string>
+	<string>net.sourceloc.cardculatorccmodule</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleInfoDictionaryVersion</key>

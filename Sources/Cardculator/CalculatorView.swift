@@ -55,7 +55,6 @@ struct CalculatorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.init(red: 29 / 256, green: 30 / 256, blue: 31 / 256))
         .cornerRadius(24)
-        .opacity(HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown") ? 1 : 0)
         .onAppear(perform: {
             stylePrefChanged()
         })
@@ -277,7 +276,6 @@ struct CalculatorButton: View {
                 .frame(width: type == .zero ? size * 2 + 8: size, height: size)
                 .background(buttonColor())
                 .cornerRadius(999)
-                .opacity(HBPreferences(identifier: "ovh.exerhythm.cardculatorPreferences").bool(forKey: "preferencesShown") ? 1 : 0)
         })
     }
     
