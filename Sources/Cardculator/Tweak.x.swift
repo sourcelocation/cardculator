@@ -9,15 +9,15 @@ var listener: CardculatorListener?
 var closeCCCallback: () -> Void = {}
 
 
-class CardculatorListener: NSObject, LAListener {
-    let listenerId = "ovh.exerhythm.cardculator"
-    
-    func activator(_ activator: LAActivator?, receive event: LAEvent?) {
-        guard TweakPreferences.shared.enabled.boolValue else { return }
-        event?.isHandled = true
-        presentCalculator()
-    }
-    
+class CardculatorListener: NSObject /*, LAListener*/ {
+//    let listenerId = "ovh.exerhythm.cardculator"
+
+//    func activator(_ activator: LAActivator?, receive event: LAEvent?) {
+//        guard PreferenceManager.shared.settings.enabled.boolValue else { return }
+//        event?.isHandled = true
+//        presentCalculator()
+//    }
+
     @objc func presentCalculator() {
         if calculatorWindow.vc.calculatorViewShown() {
             calculatorWindow.vc.hideCalculatorView()
@@ -33,19 +33,26 @@ class CardculatorListener: NSObject, LAListener {
 
     override init() {
         super.init()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(ccButtonTapped), name: .init("CCPresentCalculator"), object: nil)
-        let lashared = LAActivator.sharedInstance()
-        if !lashared!.hasSeenListener(withName: listenerId) {
-            lashared?.assign(LAEvent.event(withName: "libactivator.slide-in.bottom-right") as? LAEvent, toListenerWithName: listenerId)
-        }
-        lashared!.register(self, forName: listenerId)
+//        let lashared = LAActivator.sharedInstance()
+//        if !lashared!.hasSeenListener(withName: listenerId) {
+//            lashared?.assign(LAEvent.event(withName: "libactivator.slide-in.bottom-right") as? LAEvent, toListenerWithName: listenerId)
+//        }
+//        lashared!.register(self, forName: listenerId)
     }
 }
 
 class SpringBoardHook: ClassHook<SpringBoard> {
     func applicationDidFinishLaunching(_ application : AnyObject) {
         orig.applicationDidFinishLaunching(application)
+        
+        do {
+            try PreferenceManager.shared.loadSettings()
+        } catch {
+            remLog(error.localizedDescription)
+        }
+        remLog("loaded")
 
         calculatorWindow = CalculatorWindow(frame: UIScreen.main.bounds)
         

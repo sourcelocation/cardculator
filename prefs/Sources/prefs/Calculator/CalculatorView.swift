@@ -25,6 +25,8 @@ struct CalculatorView: View {
     
     @State var number = "0"
     
+    @StateObject private var preferenceStorage = PreferenceStorage.shared
+    
     var body: some View {
         GeometryReader { (geometry) in
             VStack(alignment: .leading, spacing:8) {
@@ -206,9 +208,9 @@ struct CalculatorView: View {
     
     
     func stylePrefChanged() {
-        updateCalculatorStyle(style: PreferenceManager.shared.settings.selectedStyle)
+        updateCalculatorStyle(style: preferenceStorage.selectedStyle)
     }
-    func updateCalculatorStyle(style: Settings.CalculatorStyle) {
+    func updateCalculatorStyle(style: CalculatorStyle) {
         switch style {
         case .card:
             buttonTypes = [

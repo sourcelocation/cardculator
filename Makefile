@@ -1,24 +1,19 @@
-TARGET := iphone:clang:latest:14.0
-INSTALL_TARGET_PROCESSES = SpringBoard
+ARCHS = arm64 arm64e
+#INSTALL_TARGET_PROCESSES = SpringBoard
+INSTALL_TARGET_PROCESSES = Preferences
+TARGET := iphone:clang:16.4:13.0
+export SYSROOT = $(THEOS)/sdks/iPhoneOS16.4.sdk
+
+include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Cardculator
 
-$(TWEAK_NAME)_FILES = $(shell find Sources/$(TWEAK_NAME) -name '*.swift') $(shell find Sources/$(TWEAK_NAME)C -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')
-$(TWEAK_NAME)_SWIFTFLAGS = -ISources/$(TWEAK_NAME)C/include
-$(TWEAK_NAME)_CFLAGS = -fobjc-arc -ISources/$(TWEAK_NAME)C/include
+Cardculator_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices SpringBoardFoundation MediaRemote MobileTimer SpringBoardUI
+Cardculator_FILES = $(shell find Sources/Cardculator -name '*.swift') $(shell find Sources/CardculatorC -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')
+Cardculator_SWIFTFLAGS = -ISources/CardculatorC/include
+Cardculator_CFLAGS = -fobjc-arc -ISources/CardculatorC/include
 
-
-BUNDLE_NAME = $(TWEAK_NAME)Preferences
-$(BUNDLE_NAME)_FILES = $(shell find Sources/$(BUNDLE_NAME) -name '*.swift')
-$(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
-$(BUNDLE_NAME)_CFLAGS = -fobjc-arc
-$(BUNDLE_NAME)_FRAMEWORKS = Preferences
-$(BUNDLE_NAME)_EXTRA_FRAMEWORKS = Cephei
-
-
-include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
-include $(THEOS_MAKE_PATH)/bundle.mk
+SUBPROJECTS += prefs
 SUBPROJECTS += cardculatorccmodule
 include $(THEOS_MAKE_PATH)/aggregate.mk
-

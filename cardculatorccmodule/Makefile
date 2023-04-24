@@ -1,4 +1,5 @@
-TARGET := iphone:clang:latest:12.2
+TARGET := iphone:clang:14.5:13.0
+export SYSROOT = $(THEOS)/sdks/iPhoneOS14.5.sdk
 
 include $(THEOS)/makefiles/common.mk
 
