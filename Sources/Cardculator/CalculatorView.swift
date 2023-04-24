@@ -58,11 +58,6 @@ struct CalculatorView: View {
         .onAppear(perform: {
             stylePrefChanged()
         })
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("StylePrefChanged"))) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.23, execute: {
-                stylePrefChanged()
-            })
-        }
     }
     
     
@@ -206,6 +201,7 @@ struct CalculatorView: View {
     
     
     func stylePrefChanged() {
+        remLog(PreferenceManager.shared.settings.selectedStyle)
         updateCalculatorStyle(style: PreferenceManager.shared.settings.selectedStyle)
     }
     func updateCalculatorStyle(style: Settings.CalculatorStyle) {

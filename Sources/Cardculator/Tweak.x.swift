@@ -57,9 +57,30 @@ class SpringBoardHook: ClassHook<SpringBoard> {
         calculatorWindow = CalculatorWindow(frame: UIScreen.main.bounds)
         
         listener = CardculatorListener()
+        
+        
+        let center = CFNotificationCenterGetDarwinNotifyCenter()
+        let name = "net.sourceloc.cardculator.prefs/Update" as CFString
+        let observer = UnsafeMutableRawPointer(Unmanaged.passRetained(self).toOpaque())
+
+        CFNotificationCenterAddObserver(center, observer, { center, observer, name, object, userInfo in
+            remLog("relo")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                reloadSettings()
+            })
+        }, name, nil, .deliverImmediately)
     }
 }
 
+
+func reloadSettings() {
+    remLog("ReloadSettings 2")
+    do {
+        try PreferenceManager.shared.loadSettings()
+    } catch {
+        remLog("Failed to load settings: \(error.localizedDescription)")
+    }
+}
 
 
 class CCUIModularControlCenterOverlayViewControllerHook: ClassHook<CCUIModularControlCenterOverlayViewController> {
@@ -71,5 +92,13 @@ class CCUIModularControlCenterOverlayViewControllerHook: ClassHook<CCUIModularCo
     func viewDidLoad() {
         orig.viewDidLoad()
         closeCCCallback = cardculator_hideCC
+    }
+}
+
+
+
+struct Cardculator: Tweak {
+    init() {
+        remLog("wut")
     }
 }

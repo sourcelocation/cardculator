@@ -24,7 +24,7 @@ final class PreferenceManager {
 struct Settings: Codable {
     var isEnabledTweak: Bool = true
     
-    enum CalculatorStyle: Codable {
+    enum CalculatorStyle: String, Codable {
         case card, cardAlt, stock, square
     }
     
