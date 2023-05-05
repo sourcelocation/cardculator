@@ -4,3 +4,6 @@
 
 
 - PiP/Mini calculator for jailbroken iOS devices
+
+
+Join my discord: https://discord.gg/sourcelocation
