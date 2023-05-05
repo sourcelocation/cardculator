@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>CardculatorCCModule</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cardculator1</string>
+	<string>Cardculator</string>
 	<key>CFBundleExecutable</key>
 	<string>CardculatorCCModule</string>
 	<key>CFBundleIdentifier</key>

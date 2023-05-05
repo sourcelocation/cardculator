@@ -3,29 +3,38 @@ import SwiftUI
 struct RootView: View {
     @StateObject private var preferenceStorage = PreferenceStorage.shared
     
-    
     var body: some View {
-        GeometryReader { p in
-            Form {
-                Section {
-                    Toggle("Enabled", isOn: $preferenceStorage.isEnabled)
-                        .disabled(true)
-                    
-                    Picker("Style", selection: $preferenceStorage.selectedStyle) {
-                        Text("Card").tag("card")
-                        Text("Card Alt").tag("cardAlt")
-                        Text("Square").tag("square")
-                        Text("Stock").tag("stock")
-                    }
-                    .pickerStyle(.segmented)
-                } header: {
-                    Text("General")
+        Form {
+            Section {
+                Toggle("Enabled", isOn: $preferenceStorage.isEnabled)
+                
+                Text("Style:")
+                Picker("Style", selection: $preferenceStorage.selectedStyle) {
+                    Text("Card").tag("card")
+                    Text("Card Alt").tag("cardAlt")
+                    Text("Square").tag("square")
+                    Text("Stock").tag("stock")
                 }
+                .pickerStyle(.segmented)
+            } header: {
+                Text("General")
+            } footer: {
+                Text("To add the Cardculator Control Center module, go to Settings -> Control Center and add Cardculator from there.")
             }
+            
+            Section {
+                Toggle("Snap to corners", isOn: $preferenceStorage.snapToCorners)
+                Text("Speed:")
+                HStack {
+                    Slider(value: $preferenceStorage.speed, in: 50...250)
+                    Text("\(Int(preferenceStorage.speed))%")
+                        .frame(width: 40)
+                }
+            } header: {
+                Text("Behavior")
+            }
+            .accentColor(.orange)
         }
-//        .onChange(of: preferenceStorage) { newValue in
-//            remLog("ReloadSettings 1")
-//            NotificationCenter.default.post(name: NSNotification.Name("ReloadSettings"), object: nil)
-//        }
+        .toggleStyle(SwitchToggleStyle(tint: .orange))
     }
 }
