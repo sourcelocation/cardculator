@@ -18,32 +18,29 @@ class DraggableAreaViewController: UIViewController {
     }
     
     var maxCalcWidth: CGFloat {
-        switch TweakPreferences.shared.selectedStyle as! String {
-        case "Card", "Card Alt":
+        remLog(PreferenceManager.shared.settings.isEnabledTweak)
+        switch PreferenceManager.shared.settings.selectedStyle {
+        case .card, .cardAlt:
             return 400
-        case "Stock":
+        case .stock:
             return 250
-        case "Square":
+        case .square:
             return 300
-        default:
-            return 10
         }
     }
-    var ratio: CGFloat {
-        switch TweakPreferences.shared.selectedStyle as! String {
-        case "Card", "Card Alt":
+    var calcSizeRatio: CGFloat {
+        switch PreferenceManager.shared.settings.selectedStyle {
+        case .card, .cardAlt:
             return 0.6
-        case "Stock":
+        case .stock:
             return 1.45
-        case "Square":
-            return 1
-        default:
+        case .square:
             return 1
         }
     }
     
     var speedK: Double {
-        TweakPreferences.shared.speed / 100
+        PreferenceManager.shared.settings.speed / 100
     }
     var bigScreen: Bool {
         view.bounds.width > maxCalcWidth
@@ -72,7 +69,7 @@ class DraggableAreaViewController: UIViewController {
     func showCalculatorView() {
         let padding: CGFloat = 10
         let calcwidth = min(maxCalcWidth, view.bounds.width - padding * 2)
-        let calcheight = calcwidth * ratio
+        let calcheight = calcwidth * calcSizeRatio
         
         let calculatorView = CalculatorView(close: hideCalculatorView).frame(width: calcwidth, height: calcheight)
         
@@ -120,7 +117,7 @@ class DraggableAreaViewController: UIViewController {
             var animationTime: TimeInterval = 0
             let minVelocity: CGFloat = 300
             
-            if TweakPreferences.shared.snapToCorners.boolValue {
+            if PreferenceManager.shared.settings.snapToCorners {
                 animationTime = 0.75
                 if velocity.y < -minVelocity || (!(velocity.y > minVelocity) && gesture.location(in: view).y < view.bounds.height / 2) {
                     calcY = calcView.frame.height / 2 + max(10, safeAreaInsets.top)

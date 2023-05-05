@@ -1,4 +1,4 @@
-import CardculatorC
+import prefsC
 
 func remLog(_ objs: Any...) {
     for obj in objs {

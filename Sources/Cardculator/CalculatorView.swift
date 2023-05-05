@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Cephei
+//import Cephei
 
 enum Operation {
     case add,subtract,multiply,divide
@@ -58,11 +58,6 @@ struct CalculatorView: View {
         .onAppear(perform: {
             stylePrefChanged()
         })
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("StylePrefChanged"))) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.23, execute: {
-                stylePrefChanged()
-            })
-        }
     }
     
     
@@ -206,22 +201,24 @@ struct CalculatorView: View {
     
     
     func stylePrefChanged() {
-        updateCalculatorStyle(style: TweakPreferences.shared.selectedStyle as! String)
+        remLog(PreferenceManager.shared.settings.selectedStyle)
+        updateCalculatorStyle(style: PreferenceManager.shared.settings.selectedStyle)
     }
-    func updateCalculatorStyle(style: String) {
-        if style == "Card" {
+    func updateCalculatorStyle(style: Settings.CalculatorStyle) {
+        switch style {
+        case .card:
             buttonTypes = [
                [.six,.seven,.eight,.nine    ,.c,.subtract,.divide],
                [.two,.three,.four,.five,.plusminus,.add,.multiply],
                [.one,.zero,.dot,.percent,.sqrt,.equal],
            ]
-        } else if style == "Card Alt" {
+        case .cardAlt:
             buttonTypes = [
                [.c,.subtract,.divide,.six,.seven,.eight,.nine],
                [.plusminus,.add,.multiply,.two,.three,.four,.five],
                [.percent,.sqrt,.equal,.one,.zero,.dot],
            ]
-        } else if style == "Stock" {
+        case .stock:
             buttonTypes = [
                 [.c,.plusminus,.sqrt,.divide],
                 [.seven,.eight,.nine,.multiply],
@@ -229,7 +226,7 @@ struct CalculatorView: View {
                 [.one,.two,.three,.add],
                 [.zero,.dot,.equal],
            ]
-        } else if style == "Square" {
+        case .square:
             buttonTypes = [
                 [.seven,.eight,.nine,.c,.subtract],
                 [.four,.five,.six,.plusminus,.add],

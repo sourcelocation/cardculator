@@ -1,4 +1,4 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.2
 
 import PackageDescription
 import Foundation
@@ -11,7 +11,7 @@ let projectDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         let configURL = URL(fileURLWithPath: path, relativeTo: projectDir)
         guard let infoString = try? String(contentsOf: configURL) else {
             fatalError("""
-            Coulmd not find Theos SPM config. Have you run `make spm` yet?
+            Could not find Theos SPM config. Have you run `make spm` yet?
             """)
         }
         let pairs = infoString.split(separator: "\n").map {
@@ -44,7 +44,7 @@ let conf = TheosConfiguration(at: ".theos/spm_config")
 let theosPath = conf.theos
 let sdk = conf.sdk
 let resourceDir = conf.swiftResourceDir
-let deploymentTarget = "14.0"
+let deploymentTarget = conf.deploymentTarget
 let triple = "arm64-apple-ios\(deploymentTarget)"
 
 let libFlags: [String] = [
@@ -62,30 +62,28 @@ let cxxFlags: [String] = [
 ]
 
 let swiftFlags: [String] = libFlags + [
-    "-target", triple, "-sdk", sdk, "-resource-dir", resourceDir
+    "-target", triple, "-sdk", sdk, "-resource-dir", resourceDir,
 ]
 
-
-
 let package = Package(
-    name: "Cardculator",
-    platforms: [.iOS(deploymentTarget)],
+    name: "prefs",
+    platforms: [.iOS("14.0")],
     products: [
         .library(
-            name: "Cardculator",
-            targets: ["Cardculator"]
-        )
+            name: "prefs",
+            targets: ["prefs"]
+        ),
     ],
     targets: [
         .target(
-            name: "CardculatorC",
+            name: "prefsC",
             cSettings: [.unsafeFlags(cFlags)],
             cxxSettings: [.unsafeFlags(cxxFlags)]
         ),
         .target(
-            name: "Cardculator",
-            dependencies: ["CardculatorC"],
+            name: "prefs",
+            dependencies: ["prefsC"],
             swiftSettings: [.unsafeFlags(swiftFlags)]
-        )
+        ),
     ]
 )
