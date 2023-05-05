@@ -30,6 +30,8 @@ struct Settings: Codable {
     
     var selectedStyle: CalculatorStyle = .card
     
+    var squareStyleSignsFlipped = true
+    
     var snapToCorners: Bool = true
     
     var speed: Double = 100.0

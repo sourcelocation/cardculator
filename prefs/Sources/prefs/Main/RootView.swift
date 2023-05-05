@@ -16,6 +16,10 @@ struct RootView: View {
                     Text("Stock").tag("stock")
                 }
                 .pickerStyle(.segmented)
+                
+                if preferenceStorage.selectedStyle == "square" {
+                    Toggle("Divide and Equal buttons swapped", isOn: $preferenceStorage.squareStyleSignsFlipped)
+                }
             } header: {
                 Text("General")
             } footer: {

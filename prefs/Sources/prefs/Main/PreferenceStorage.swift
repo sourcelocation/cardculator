@@ -12,6 +12,7 @@ final class PreferenceStorage: ObservableObject {
     
     @Published(key: "isEnabledTweak", registry: registry) var isEnabled = true
     @Published(key: "selectedStyle", registry: registry) var selectedStyle = "card"
+    @Published(key: "squareStyleSignsFlipped", registry: registry) var squareStyleSignsFlipped = true
     @Published(key: "snapToCorners", registry: registry) var snapToCorners = true
     @Published(key: "speed", registry: registry) var speed = 100.0
     

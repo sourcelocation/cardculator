@@ -205,6 +205,8 @@ struct CalculatorView: View {
         updateCalculatorStyle(style: PreferenceManager.shared.settings.selectedStyle)
     }
     func updateCalculatorStyle(style: Settings.CalculatorStyle) {
+        let squareStyleSignsFlipped = PreferenceManager.shared.settings.squareStyleSignsFlipped
+        
         switch style {
         case .card:
             buttonTypes = [
@@ -231,8 +233,8 @@ struct CalculatorView: View {
                 [.seven,.eight,.nine,.c,.subtract],
                 [.four,.five,.six,.plusminus,.add],
                 [.one,.two,.three,.sqrt,.multiply],
-                [.zero,.dot,.divide,.equal],
-           ]
+                [.zero,.dot, (squareStyleSignsFlipped ? .equal : .divide),(squareStyleSignsFlipped ? .divide : .equal)]
+            ]
         }
     }
 }
