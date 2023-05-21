@@ -18,7 +18,7 @@ class DraggableAreaViewController: UIViewController {
     }
     
     var maxCalcWidth: CGFloat {
-        remLog(PreferenceManager.shared.settings.isEnabledTweak)
+        log(PreferenceManager.shared.settings.isEnabledTweak)
         switch PreferenceManager.shared.settings.selectedStyle {
         case .card, .cardAlt:
             return 400

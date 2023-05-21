@@ -37,8 +37,24 @@ struct RootView: View {
             } header: {
                 Text("Behavior")
             }
-            .accentColor(.orange)
+            
+            Section {
+                Picker("hapticFeedback", selection: $preferenceStorage.hapticFeedback) {
+                    Text("Off").tag(-1)
+                    Text("Light").tag(UIImpactFeedbackGenerator.FeedbackStyle.light.rawValue)
+                    Text("Medium").tag(UIImpactFeedbackGenerator.FeedbackStyle.medium.rawValue)
+                    Text("Heavy").tag(UIImpactFeedbackGenerator.FeedbackStyle.heavy.rawValue)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: preferenceStorage.hapticFeedback) { newValue in
+                    guard let style = UIImpactFeedbackGenerator.FeedbackStyle(rawValue: newValue), style.rawValue != -1 else { return }
+                    UIImpactFeedbackGenerator(style: style).impactOccurred()
+                }
+            } header: {
+                Text("Haptic Feedback (Vibration)")
+            }
         }
+        .accentColor(.orange)
         .toggleStyle(SwitchToggleStyle(tint: .orange))
     }
 }

@@ -1,8 +1,7 @@
 import CardculatorC
 
-func remLog(_ objs: Any...) {
-    for obj in objs {
-        let args: [CVarArg] = [ String(describing: obj) ]
-        withVaList(args) { RLogv("%@", $0) }
-    }
+func log(_ objs: Any...) {
+    let string = objs.map { String(describing: $0) }.joined(separator: "; ")
+    let args: [CVarArg] = [ "[Cardculator-\(Date().description)] \(string)" ]
+    withVaList(args) { RLogv("%@", $0) }
 }

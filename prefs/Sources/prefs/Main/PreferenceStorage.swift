@@ -15,6 +15,7 @@ final class PreferenceStorage: ObservableObject {
     @Published(key: "squareStyleSignsFlipped", registry: registry) var squareStyleSignsFlipped = true
     @Published(key: "snapToCorners", registry: registry) var snapToCorners = true
     @Published(key: "speed", registry: registry) var speed = 100.0
+    @Published(key: "hapticFeedback", registry: registry) var hapticFeedback = UIImpactFeedbackGenerator.FeedbackStyle.light.rawValue
     
     private var cancellables: Set<AnyCancellable> = []
     
