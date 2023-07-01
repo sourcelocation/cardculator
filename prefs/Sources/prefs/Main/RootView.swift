@@ -23,7 +23,7 @@ struct RootView: View {
             } header: {
                 Text("General")
             } footer: {
-                Text("To add the Cardculator Control Center module, go to Settings -> Control Center and add Cardculator from there.")
+                Text("To add the Cardculator Control Center module, go to Settings -> Control Center and add Cardculator from there.\n\nAll options don't require a respring, except for the \"Enabled\" toggle.")
             }
             
             Section {
@@ -32,7 +32,7 @@ struct RootView: View {
                 HStack {
                     Slider(value: $preferenceStorage.speed, in: 50...250)
                     Text("\(Int(preferenceStorage.speed))%")
-                        .frame(width: 40)
+                        .frame(width: 60)
                 }
             } header: {
                 Text("Behavior")

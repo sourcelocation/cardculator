@@ -169,6 +169,11 @@ struct CalculatorView: View {
             selectedOperation = nil
             topText = number
         case .dot:
+            if selectedOperation != nil { // After pressing operation button
+                operations.append(selectedOperation!)
+                number = "0"
+                selectedOperation = nil
+            }
             if !number.contains(".") {
                 number += "."
             }
