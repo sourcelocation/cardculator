@@ -225,6 +225,7 @@ struct CalculatorView: View {
     }
     func updateCalculatorStyle(style: Settings.CalculatorStyle) {
         let squareStyleSignsFlipped = PreferenceManager.shared.settings.squareStyleSignsFlipped
+        let squareRootInsteadOfPercentage = PreferenceManager.shared.settings.squareRootInsteadOfPercentage
         
         switch style {
         case .card:
@@ -241,7 +242,7 @@ struct CalculatorView: View {
            ]
         case .stock:
             buttonTypes = [
-                [.c,.plusminus,.sqrt,.divide],
+                [.c,.plusminus,(squareRootInsteadOfPercentage ? .sqrt : .percent),.divide],
                 [.seven,.eight,.nine,.multiply],
                 [.four,.five,.six,.subtract],
                 [.one,.two,.three,.add],
@@ -251,7 +252,7 @@ struct CalculatorView: View {
             buttonTypes = [
                 [.seven,.eight,.nine,.c,.subtract],
                 [.four,.five,.six,.plusminus,.add],
-                [.one,.two,.three,.sqrt,.multiply],
+                [.one,.two,.three,(squareRootInsteadOfPercentage ? .sqrt : .percent),.multiply],
                 [.zero,.dot, (squareStyleSignsFlipped ? .equal : .divide),(squareStyleSignsFlipped ? .divide : .equal)]
             ]
         }

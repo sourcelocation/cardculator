@@ -32,6 +32,8 @@ class Settings: Codable {
     
     var squareStyleSignsFlipped = true
     
+    var squareRootInsteadOfPercentage = false
+    
     var snapToCorners: Bool = true
     
     var speed: Double = 100.0
@@ -45,6 +47,7 @@ class Settings: Codable {
         self.isEnabledTweak = try container.decode(Bool.self, forKey: .isEnabledTweak)
         self.selectedStyle = try container.decode(Settings.CalculatorStyle.self, forKey: .selectedStyle)
         self.squareStyleSignsFlipped = try container.decodeIfPresent(Bool.self, forKey: .squareStyleSignsFlipped) ?? true
+        self.squareRootInsteadOfPercentage = try container.decodeIfPresent(Bool.self, forKey: .squareRootInsteadOfPercentage) ?? false
         self.snapToCorners = try container.decode(Bool.self, forKey: .snapToCorners)
         self.speed = try container.decode(Double.self, forKey: .speed)
         self.hapticFeedback = try container.decodeIfPresent(UIImpactFeedbackGenerator.FeedbackStyle.RawValue.self, forKey: .hapticFeedback) ?? 0

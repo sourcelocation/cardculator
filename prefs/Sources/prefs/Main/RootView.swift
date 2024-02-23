@@ -20,6 +20,9 @@ struct RootView: View {
                 if preferenceStorage.selectedStyle == "square" {
                     Toggle("Divide and Equal buttons swapped", isOn: $preferenceStorage.squareStyleSignsFlipped)
                 }
+                if preferenceStorage.selectedStyle != "card" && preferenceStorage.selectedStyle != "cardAlt" {
+                    Toggle("Square root", isOn: $preferenceStorage.squareRootInsteadOfPercentage)
+                }
             } header: {
                 Text("General")
             } footer: {
